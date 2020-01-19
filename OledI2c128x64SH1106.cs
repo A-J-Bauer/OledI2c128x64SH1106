@@ -35,12 +35,12 @@ using System.Drawing.Text;
 namespace OledI2C
 {
     public static class OledI2c128x64SH1106
-    {
-        
-
-        const byte WIDTH = 132;
-        const byte HEIGHT = 64;
-        const byte PAGES = HEIGHT / 8;
+    {        
+        private const byte SH_WIDTH = 132; // SH1106 SRAM 132x64
+        private const byte SH_HEIGHT = 64;
+        private const byte SH_PAGES = SH_HEIGHT / 8;
+        private const byte PX_WIDTH = 128;
+        private const byte PX_HEIGHT = 64;
 
         //           B ... B
         //           Y ... Y
@@ -70,35 +70,35 @@ namespace OledI2C
         //           D6 .. D6
         //           D7 .. D7
 
-        public static Bitmap bitmap = new Bitmap(WIDTH, HEIGHT, PixelFormat.Format24bppRgb);
-        public static Font font = new Font("Andale Mono", 12, FontStyle.Regular, GraphicsUnit.Pixel);
-
         private static I2cConnectionSettings i2CConnectionSettings = new I2cConnectionSettings(0x01, 0x3C);
         private static I2cDevice i2cDevice = null;
-        private static byte[] buffer = new byte[PAGES * WIDTH];
-        private static Rectangle rectangle = new Rectangle(0, 0, WIDTH, HEIGHT);        
+        private static byte[] buffer = new byte[SH_PAGES * SH_WIDTH];
+        private static Rectangle rectangle = new Rectangle(0, 0, PX_WIDTH, PX_HEIGHT);
+
+        public static Bitmap bitmap = new Bitmap(PX_WIDTH, PX_HEIGHT, PixelFormat.Format24bppRgb);        
+        public static Font font = new Font("Andale Mono", 12, FontStyle.Regular, GraphicsUnit.Pixel);
 
         private static readonly byte[] initCmd = new byte[]
         {
             0x00, // is command
-            0x00, // 0x00-0x0F set lower column address
-            0x10, // 0x10-0x1F set higher column address
-            0x40, // set display start line 0x40-0x7F               
-            0xD5, 0x80, // clock divider
-            0xA8, 0x3F, // set multiplex ration mode 0xA8 0x00-0x3F
-            0xD3, 0x00, // display offset 0            
-            0x8D, 0x14, // enable charge pump
-            0x20, 0x00, // memory adressing mode=horizontal
-            0xA0, // set segment remap 0xA0/0xA1
-            0xC0, // set common output scan direction 0xC0-0xC8
-            0xDA, 0x12, // // com pins hardware configuration for 128x64
-            0x81, 0x80, // contrast control 0x00-0xFF
-            0xD9, 0x22, // pre-charge period
-            0xDB, 0x20, // set vcomh deselect level
-            0xA4, // set entire display OFF/ON 0xA4/0xA5
-            0xA6, // display mode A6=normal, A7=inverse
-            0x2E, // stop scrolling
-            0xAF // display on/off 0xAE/0xAF            
+            0x00,        // SH1106 [01] 0x00-0x0F set lower column address
+            0x10,        // SH1106 [02] 0x10-0x1F set higher column address
+            0x32,        // SH1106 [03] 0x30-0x33 set pump voltage value
+            0x40,        // SH1106 [04] set display start line 0x40-0x7F       
+            0x81, 0x80,  // SH1106 [05] set contrast control register 0x00-0xFF
+            0xA0,        // SH1106 [06] set segment re-map 0xA0/0xA1 normal/reverse
+            0xA4,        // SH1106 [07] set entire display normal/force on 0xA4/0xA5
+            0xA6,        // SH1106 [08] set normal/reverse display 0xA6/0xA7
+            0xA8, 0x3F,  // SH1106 [09] set multiplex ratio 0x00-0x3F        
+            0xAD, 0x8B,  // SH1106 [10] set dc-dc off/on 0x8A-0x8B disable/on when display on
+            0xC0,        // SH1106 [13] set output scan direction 0xC0/0xC8
+            0xD3, 0x00,  // SH1106 [14] set display offset 0x00-0x3F
+            0xD5, 0x80,  // SH1106 [15] set display clock divide ratio/oscillator 
+            0xD9, 0x22,  // SH1106 [16] set discharge/precharge period 0x00-0xFF           
+            0xDA, 0x12,  // SH1106 [17] set common pads hardware configuration 0x02/0x12 sequential/alternative                        
+            0xDB, 0x20,  // SH1106 [18] set vcom deselect level 0x00-0xFF
+
+            0xAF         // SH1106 [11] display off/on 0xAE/0xAF 
         };
 
         private static byte[] pageCmd = new byte[]
@@ -108,17 +108,17 @@ namespace OledI2C
             0x00, // lower columns address =0
             0x10, // upper columns address =0
         };
-        private static byte[] pageData = new byte[WIDTH + 1];
+        private static byte[] pageData = new byte[SH_WIDTH + 1];
 
         private static void SendBuffer()
-        {
-            for (byte i = 0; i < PAGES; i++)
+        {            
+            for (byte i = 0; i < SH_PAGES; i++)
             {
-                pageCmd[1] = (byte)(0xB0 + i); // page number
+                pageCmd[1] = (byte)(0xB0 + i); // page number SH1106 [12]
                 i2cDevice.Write(pageCmd);
 
                 pageData[0] = 0x40; // is data
-                Buffer.BlockCopy(buffer, i * WIDTH, pageData, 1, WIDTH);
+                Buffer.BlockCopy(buffer, i * SH_WIDTH, pageData, 1, SH_WIDTH);
                 i2cDevice.Write(pageData);
             }
         }
@@ -149,7 +149,7 @@ namespace OledI2C
         }
 
         public static void Update()
-        {
+        {            
             BitmapData bitmapData = bitmap.LockBits(rectangle, ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
             IntPtr ptr = bitmapData.Scan0;
             int bytes = Math.Abs(bitmapData.Stride) * bitmap.Height;
@@ -157,21 +157,22 @@ namespace OledI2C
             Marshal.Copy(ptr, bmpRGB, 0, bytes);
             bitmap.UnlockBits(bitmapData);
 
-            for (int i = 0; i < WIDTH; i++)
+            int bufferOffset = (SH_WIDTH - PX_WIDTH) / 2;
+            for (int i = 0; i < PX_WIDTH; i++)
             {
-                for (int j = 0; j < HEIGHT; j += 8)
+                for (int j = 0; j < PX_HEIGHT; j += 8)
                 {
                     int l = 1;
                     byte data = 0;
                     for (int k = 0; k < 8; k++)
                     {
-                        byte bmpR = bmpRGB[((j + k) * WIDTH + i) * 3 + 0];
-                        byte bmpG = bmpRGB[((j + k) * WIDTH + i) * 3 + 1];
-                        byte bmpB = bmpRGB[((j + k) * WIDTH + i) * 3 + 2];
+                        byte bmpR = bmpRGB[((j + k) * PX_WIDTH + i) * 3 + 0];
+                        byte bmpG = bmpRGB[((j + k) * PX_WIDTH + i) * 3 + 1];
+                        byte bmpB = bmpRGB[((j + k) * PX_WIDTH + i) * 3 + 2];
                         data |= (byte)(bmpR + bmpG + bmpB > 0 ? l : 0);
                         l *= 2;
                     }
-                    buffer[j / 8 * WIDTH + i] = data;
+                    buffer[j / 8 * SH_WIDTH + i+ bufferOffset] = data;
                 }
             }
 
