@@ -38,10 +38,14 @@ fc-cache
 ```
 
 ## Usage:
+```
+using System.Drawing;
+using OledI2C;
+```
 
 Initialize once with:
 ```
-OledI2c128x64SH1106.Init();
+OledI2c132x64SH1106.Init();
 ```
 
 Change the bitmap e.g.:
@@ -57,12 +61,12 @@ using (Graphics g = Graphics.FromImage(OledI2c128x64SH1106.bitmap))
 
 Update:
 ```
-OledI2c128x64SH1106.Update();
+OledI2c132x64SH1106.Update();
 ```
 
 Release when not used any more (e.g. in Dispose):
 ```
-OledI2c128x64SH1106.Release();
+OledI2c132x64SH1106.Release();
 ```
 ## Comments
 This is a black/white only display so antialiasing is in the way when drawing to a bitmap and converting it into display pages.
