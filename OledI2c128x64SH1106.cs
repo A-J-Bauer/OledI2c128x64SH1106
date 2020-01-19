@@ -193,6 +193,8 @@ namespace OledI2C
         {
             if (i2cDevice != null)
             {
+                Power(false);
+
                 i2cDevice.Dispose();
                 i2cDevice = null;
             }
