@@ -48,7 +48,7 @@ Initialize once with:
 OledI2c128x64SH1106.Init();
 ```
 
-Change the bitmap e.g.:
+Change the bitmap with GDI+ functions, e.g.:
 ```
 using (Graphics g = Graphics.FromImage(OledI2c128x64SH1106.bitmap))
 {
