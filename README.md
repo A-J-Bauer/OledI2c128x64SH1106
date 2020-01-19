@@ -12,7 +12,7 @@ sudo apt-get install libgdiplus
 sudo apt-get install ttf-mscorefonts-installer
 ```
 
-Also you need to set Antialiasing off for the font used:
+Also you need to set Antialiasing off for the font being used:
 ```
 cd /home/pi/.config
 sudo mkdir fontconfig
