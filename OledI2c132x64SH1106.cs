@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -31,11 +31,14 @@ using System.Drawing.Text;
 //
 // > fc-cache
 
-namespace YourNamespace
+
+namespace OledI2C
 {
-    public static class OledI2c128x64SH1106
-    {        
-        const byte WIDTH = 128;
+    public static class OledI2c132x64SH1106
+    {
+        
+
+        const byte WIDTH = 132;
         const byte HEIGHT = 64;
         const byte PAGES = HEIGHT / 8;
 
@@ -43,7 +46,7 @@ namespace YourNamespace
         //           Y ... Y
         //           T ... T
         //           E ... E
-        //           0 ... 127
+        //           0 ... 131
         //
         //           D0 .. D0
         //           D1 .. D1
@@ -123,7 +126,7 @@ namespace YourNamespace
         public static bool Init()
         {            
             i2cDevice = I2cDevice.Create(i2CConnectionSettings);
-            
+
             if (i2cDevice == null)
             {
                 return false;
