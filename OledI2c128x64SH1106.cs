@@ -180,9 +180,10 @@ namespace OledI2C
 
         public static void Release()
         {
-            if (i2cDevice == null)
+            if (i2cDevice != null)
             {
                 i2cDevice.Dispose();
+                i2cDevice = null;
             }
         }
 
