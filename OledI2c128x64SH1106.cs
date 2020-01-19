@@ -34,7 +34,7 @@ using System.Drawing.Text;
 
 namespace OledI2C
 {
-    public static class OledI2c132x64SH1106
+    public static class OledI2c128x64SH1106
     {
         
 
