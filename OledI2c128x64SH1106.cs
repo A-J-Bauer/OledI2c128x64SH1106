@@ -32,7 +32,7 @@ using System.Drawing.Text;
 // > fc-cache
 
 
-namespace FloorHeating
+namespace YourNamespace
 {
     public static class OledI2c128x64SH1106
     {
