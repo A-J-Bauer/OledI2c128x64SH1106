@@ -31,13 +31,10 @@ using System.Drawing.Text;
 //
 // > fc-cache
 
-
 namespace YourNamespace
 {
     public static class OledI2c128x64SH1106
-    {
-        
-
+    {        
         const byte WIDTH = 128;
         const byte HEIGHT = 64;
         const byte PAGES = HEIGHT / 8;
@@ -126,7 +123,7 @@ namespace YourNamespace
         public static bool Init()
         {            
             i2cDevice = I2cDevice.Create(i2CConnectionSettings);
-
+            
             if (i2cDevice == null)
             {
                 return false;
