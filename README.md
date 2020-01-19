@@ -22,15 +22,15 @@ sudo nano fonts.conf
 add
 ```
 <fontconfig>
-  <match target = "font" >
+  <match target="font">
     <test name="family" qual="any">
       <string>Andale Mono</string>
     </test>
     <edit name="antialias" mode="assign">
-      < bool > false </ bool >
-    </ edit >
-  </ match >
-</ fontconfig >
+      <bool>false</bool>
+    </edit>
+  </match>
+</fontconfig>
 ```
 update font cache
 ```
