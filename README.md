@@ -50,12 +50,12 @@ OledI2c132x64SH1106.Init();
 
 Change the bitmap e.g.:
 ```
-using (Graphics g = Graphics.FromImage(OledI2c128x64SH1106.bitmap))
+using (Graphics g = Graphics.FromImage(OledI2c132x64SH1106.bitmap))
 {
   g.Clear(Color.Black);
   //g.TextRenderingHint = TextRenderingHint.SingleBitPerPixelGridFit; // you wish :-) see comments below
-  g.DrawString("Hello World", OledI2c128x64SH1106.font, Brushes.White, 2, 2);                        
-  g.DrawString("127.0.0.1", OledI2c128x64SH1106.font, Brushes.White, 2, 20);
+  g.DrawString("Hello World", OledI2c132x64SH1106.font, Brushes.White, 2, 2);                        
+  g.DrawString("127.0.0.1", OledI2c132x64SH1106.font, Brushes.White, 2, 20);
 }
 ```
 
