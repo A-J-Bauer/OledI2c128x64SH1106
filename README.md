@@ -1,5 +1,5 @@
-# OledI2c132x64SH1106.cs
-A single static C# class for the I2C Oled 132x64 display with SH1106 driver for the Raspberry and .Net Core
+# OledI2c128x64SH1106.cs
+A single static C# class for the I2C Oled 128x64 display with SH1106 driver for the Raspberry and .Net Core
 
 ![Hello World](https://github.com/A-J-Bauer/OledI2c128x64SH1106/blob/master/HelloWorld.png)
 
@@ -45,28 +45,28 @@ using OledI2C;
 
 Initialize once with:
 ```
-OledI2c132x64SH1106.Init();
+OledI2c128x64SH1106.Init();
 ```
 
 Change the bitmap e.g.:
 ```
-using (Graphics g = Graphics.FromImage(OledI2c132x64SH1106.bitmap))
+using (Graphics g = Graphics.FromImage(OledI2c128x64SH1106.bitmap))
 {
   g.Clear(Color.Black);
   //g.TextRenderingHint = TextRenderingHint.SingleBitPerPixelGridFit; // you wish :-) see comments below
-  g.DrawString("Hello World", OledI2c132x64SH1106.font, Brushes.White, 2, 2);                        
-  g.DrawString("127.0.0.1", OledI2c132x64SH1106.font, Brushes.White, 2, 20);
+  g.DrawString("Hello World", OledI2c128x64SH1106.font, Brushes.White, 2, 2);                        
+  g.DrawString("127.0.0.1", OledI2c128x64SH1106.font, Brushes.White, 2, 20);
 }
 ```
 
 Update:
 ```
-OledI2c132x64SH1106.Update();
+OledI2c128x64SH1106.Update();
 ```
 
 Release when not used any more (e.g. in Dispose):
 ```
-OledI2c132x64SH1106.Release();
+OledI2c128x64SH1106.Release();
 ```
 ## Comments
 This is a black/white only display so antialiasing is in the way when drawing to a bitmap and converting it into display pages.
