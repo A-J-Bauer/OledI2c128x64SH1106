@@ -100,14 +100,15 @@ namespace OledI2C
 
             0xAF        // SH1106 [11] display off/on 0xAE/0xAF 
         };
+        
         private static byte[] pageCmd = new byte[]
-
         {
             0x00, // is command
             0xB0, // page address (B0-B7)
             0x00, // lower columns address =0
             0x10, // upper columns address =0
         };
+        
         private static byte[] pageData = new byte[SH_WIDTH + 1];
 
         private static void SendBuffer()
