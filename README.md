@@ -76,5 +76,5 @@ OledI2c128x64SH1106.Release();
 ```
 ## Comments
 This is a black/white only display so antialiasing is in the way when drawing to a bitmap and converting it into display pages.
-"TextRenderingHint.SingleBitPerPixelGridFit" is not working on the Pi/Linux and the extra config file needs to be created for the font being used.
+"TextRenderingHint.SingleBitPerPixelGridFit" is not working on the Pi/Linux so the extra config file needs to be created for the font being used.
 
