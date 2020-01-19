@@ -54,6 +54,7 @@ using (Graphics g = Graphics.FromImage(OledI2c128x64SH1106.bitmap))
 {
   g.Clear(Color.Black);
   //g.TextRenderingHint = TextRenderingHint.SingleBitPerPixelGridFit; // you wish :-) see comments below
+  g.DrawRectangle(Pens.White, new Rectangle(0, 0, 127, 63));
   g.DrawString("Hello World", OledI2c128x64SH1106.font, Brushes.White, 2, 2);                        
   g.DrawString("127.0.0.1", OledI2c128x64SH1106.font, Brushes.White, 2, 20);
 }
@@ -70,5 +71,5 @@ OledI2c128x64SH1106.Release();
 ```
 ## Comments
 This is a black/white only display so antialiasing is in the way when drawing to a bitmap and converting it into display pages.
-"TextRenderingHint.SingleBitPerPixelGridFit" is not working on the Pi and the extra config file needs to be created for the font being used. This class is just a quick hack, feel free to improve.
+"TextRenderingHint.SingleBitPerPixelGridFit" is not working on the Pi/Linux and the extra config file needs to be created for the font being used.
 
