@@ -77,30 +77,7 @@ namespace OledI2C
 
         public static Bitmap bitmap = new Bitmap(PX_WIDTH, PX_HEIGHT, PixelFormat.Format24bppRgb);        
         public static Font font = new Font("Andale Mono", 12, FontStyle.Regular, GraphicsUnit.Pixel);
-
-        private static readonly byte[] initCmd = new byte[]
-        {
-            0x00, // is command
-            0x00,        // SH1106 [01] 0x00-0x0F set lower column address
-            0x10,        // SH1106 [02] 0x10-0x1F set higher column address
-            0x32,        // SH1106 [03] 0x30-0x33 set pump voltage value
-            0x40,        // SH1106 [04] set display start line 0x40-0x7F       
-            0x81, 0x80,  // SH1106 [05] set contrast control register 0x00-0xFF
-            0xA0,        // SH1106 [06] set segment re-map 0xA0/0xA1 normal/reverse
-            0xA4,        // SH1106 [07] set entire display normal/force on 0xA4/0xA5
-            0xA6,        // SH1106 [08] set normal/reverse display 0xA6/0xA7
-            0xA8, 0x3F,  // SH1106 [09] set multiplex ratio 0x00-0x3F        
-            0xAD, 0x8B,  // SH1106 [10] set dc-dc off/on 0x8A-0x8B disable/on when display on
-            0xC0,        // SH1106 [13] set output scan direction 0xC0/0xC8
-            0xD3, 0x00,  // SH1106 [14] set display offset 0x00-0x3F
-            0xD5, 0x80,  // SH1106 [15] set display clock divide ratio/oscillator 
-            0xD9, 0x22,  // SH1106 [16] set discharge/precharge period 0x00-0xFF           
-            0xDA, 0x12,  // SH1106 [17] set common pads hardware configuration 0x02/0x12 sequential/alternative                        
-            0xDB, 0x20,  // SH1106 [18] set vcom deselect level 0x00-0xFF
-
-            0xAF         // SH1106 [11] display off/on 0xAE/0xAF 
-        };
-
+        
         private static byte[] pageCmd = new byte[]
         {
             0x00, // is command
@@ -123,29 +100,60 @@ namespace OledI2C
             }
         }
 
-        public static bool Init()
-        {            
-            i2cDevice = I2cDevice.Create(i2CConnectionSettings);
-
-            if (i2cDevice == null)
+        public static bool Init(bool rotate=false)
+        {                        
+            if ((i2cDevice = I2cDevice.Create(i2CConnectionSettings)) == null)
             {
                 return false;
             }
+            
+            i2cDevice.Write(new byte[]
+            {
+                0x00, // is command
+                0x00,                       // SH1106 [01] 0x00-0x0F set lower column address
+                0x10,                       // SH1106 [02] 0x10-0x1F set higher column address
+                0x32,                       // SH1106 [03] 0x30-0x33 set pump voltage value
+                0x40,                       // SH1106 [04] set display start line 0x40-0x7F       
+                0x81, 0x80,                 // SH1106 [05] set contrast control register 0x00-0xFF
+                (byte)(rotate?0xA1:0xA0),   // SH1106 [06] set segment re-map 0xA0/0xA1 normal/reverse
+                0xA4,                       // SH1106 [07] set entire display normal/force on 0xA4/0xA5
+                0xA6,                       // SH1106 [08] set normal/reverse display 0xA6/0xA7
+                0xA8, 0x3F,                 // SH1106 [09] set multiplex ratio 0x00-0x3F        
+                0xAD, 0x8B,                 // SH1106 [10] set dc-dc off/on 0x8A-0x8B disable/on when display on
+                (byte)(rotate?0xC8:0xC0),   // SH1106 [13] set output scan direction 0xC0/0xC8
+                0xD3, 0x00,                 // SH1106 [14] set display offset 0x00-0x3F
+                0xD5, 0x80,                 // SH1106 [15] set display clock divide ratio/oscillator 
+                0xD9, 0x22,                 // SH1106 [16] set discharge/precharge period 0x00-0xFF           
+                0xDA, 0x12,                 // SH1106 [17] set common pads hardware configuration 0x02/0x12 sequential/alternative                        
+                0xDB, 0x20,                 // SH1106 [18] set vcom deselect level 0x00-0xFF
 
-            i2cDevice.Write(initCmd);
+                0xAF                        // SH1106 [11] display off/on 0xAE/0xAF 
+            });
 
             Array.Clear(buffer, 0, buffer.Length);
-            
-            try
-            {               
-                SendBuffer();
-            }
-            catch (Exception)
-            {
-                return false;
-            }            
+
+            SendBuffer();
 
             return true;
+        }
+
+       public static void Rotate(bool rotate)
+        {
+            i2cDevice.Write(new byte[]
+            {
+                0x00, // is command              
+                (byte)(rotate?0xA1:0xA0),   // SH1106 [06] set segment re-map 0xA0/0xA1 normal/reverse                
+                (byte)(rotate?0xC8:0xC0),   // SH1106 [13] set output scan direction 0xC0/0xC8               
+            });
+        }
+
+        public static void Power(bool on)
+        {
+            i2cDevice.Write(new byte[]
+            {
+                0x00, // is command               
+                (byte)(on?0xAF:0xAE)       // SH1106 [11] display off/on 0xAE/0xAF 
+            });
         }
 
         public static void Update()
