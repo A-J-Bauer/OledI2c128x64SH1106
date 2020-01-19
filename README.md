@@ -19,6 +19,7 @@ sudo mkdir fontconfig
 cd fontconfig
 sudo nano fonts.conf
 ```
+add
 ```
 <fontconfig>
   <match target = "font" >
@@ -30,6 +31,10 @@ sudo nano fonts.conf
     </ edit >
   </ match >
 </ fontconfig >
+```
+update font cache
+```
+fc-cache
 ```
 
 ## Usage:
