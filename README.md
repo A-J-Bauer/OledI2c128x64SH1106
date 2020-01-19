@@ -60,7 +60,7 @@ Update:
 OledI2c128x64SH1106.Update();
 ```
 
-Release when done:
+Release when not used any more (e.g. in Dispose):
 ```
 OledI2c128x64SH1106.Release();
 ```
