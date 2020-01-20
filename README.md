@@ -1,8 +1,9 @@
 # OledI2c128x64SH1106.cs
 A single static C# class for the I2C Oled 128x64 display with SH1106 driver for the Raspberry and .Net Core
 
-![Repo Image](https://repository-images.githubusercontent.com/234853723/af21c280-3b4c-11ea-8967-9ed15f41b516)
-
+<p align="center">
+  <img width="480" height="240" src="https://repository-images.githubusercontent.com/234853723/af21c280-3b4c-11ea-8967-9ed15f41b516">
+</p>
 
 ## Prepare your Pi:
 
