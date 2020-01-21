@@ -7,7 +7,12 @@ A single static C# class for the I2C Oled 128x64 display with SH1106 driver for 
 
 ## Prepare your Pi:
 
-On your Raspberry Pi you need to install libgdiplus and some Windows fonts:
+On your Raspberry Pi you need to enable I2C (menu interfacing options):
+```
+sudo raspi-config
+```
+
+Install libgdiplus and some Windows fonts:
 ```
 sudo apt-get install libgdiplus
 sudo apt-get install ttf-mscorefonts-installer
